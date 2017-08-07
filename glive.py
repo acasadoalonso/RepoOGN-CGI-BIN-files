@@ -36,6 +36,8 @@ else:
 	if not	os.path.exists(datapath+fname):	    # test of this file exists, if so is because ognES.py is running
 		print "No active flights at this time ...", fname
 		quit()				    # nothing else to do
+	cmd="rm "+tempdir+"FD* "		    # remove all the previous FD files
+	os.system(cmd)
 	execfile(execfilename)                      # invoke to processogn.py in order to generate the IGC file of today
 	rr=form['regis'].value			    # get the registration ID or ALL
 	rg=rr.strip()                               # clean the whitespace

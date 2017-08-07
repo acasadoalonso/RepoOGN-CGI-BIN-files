@@ -5,7 +5,7 @@ import cgitb
 import sqlite3
 import config
 from   geopy.geocoders import Nominatim
-def scandir (dir, rpath, html4):
+def scandir (dir, rpath, html4, curs, curs2):
 	nlines=0
 	ld = os.listdir(dir)	
 	ld.sort()
@@ -26,8 +26,8 @@ def scandir (dir, rpath, html4):
 					dst=reg[2]
 				#geolocator = Nominatim(timeout=5)
                     		execmd="select max(altitude) as maxa, latitude, longitude from OGNDATA where idflarm = '%s' and date = '%s' "% (id, dte)
-                    		curs.execute(execmd)
-				reg=curs.fetchone()
+                    		curs2.execute(execmd)
+				reg=curs2.fetchone()
 				if reg and reg != None:
 					malt=reg[0]
 					if malt == alt:
@@ -100,7 +100,7 @@ else:
 	vd = ('Valid registration: %-s %s:' % (rg,cn))
 	print (html1 % vd)
 	print html2
-	nlines=scandir(rootdir, "", html4)
+	nlines=scandir(rootdir, "", html4, curs, curs2)
 	if nlines == 0:
 		print "No flights found for:", rg 
 	print html3

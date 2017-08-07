@@ -58,8 +58,8 @@ else:
 				if dst == None: dst=0.0
                                 geolocator = Nominatim(timeout=20)
                                 execmd="select max(altitude) as maxa, latitude, longitude from OGNDATA where idflarm = '%s' and date = '%s' " % (id, dte)
-                                curs.execute(execmd)
-                                reg=curs.fetchone()
+                                curs2.execute(execmd)
+                                reg=curs2.fetchone()
                                 if reg and reg != None:
                                         malt=reg[0]
                                         if malt == alt:
