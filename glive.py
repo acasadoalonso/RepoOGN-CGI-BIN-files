@@ -5,6 +5,7 @@ import cgitb
 import sqlite3
 import time
 import datetime
+import config
 
 cgitb.enable()
 #
@@ -21,7 +22,7 @@ print("Content-type: text/html\n")
 html1="""<TITLE>Get the flights</TITLE> <IMG src="../gif/ogn-logo-150x150.png" border=1 alt=[image]><H1>Today's flights for the selected registration are: </H1> <HR> <P> %s </P> </HR> """
 html2="""<center><table><tr><td><pre>"""
 html3="""</pre></td></tr></table></center>"""
-html4='<a href="http://cunimb.net/igc2map.php?lien=http://repoogn.ddns.net:50080/DIRdata/tmp/%s'
+html4='<a href="http://cunimb.net/igc2map.php?lien=http://'+config.reposerver+'/DIRdata/tmp/%s'
 
 nlines=0                                            # init the number of lines(files) shown
 

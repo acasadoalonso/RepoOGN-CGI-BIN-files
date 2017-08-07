@@ -3,6 +3,7 @@ import cgi
 import os
 import cgitb
 import sqlite3
+import config
 from   geopy.geocoders import Nominatim
 def scandir (dir, rpath, html4):
 	nlines=0
@@ -10,20 +11,22 @@ def scandir (dir, rpath, html4):
 	ld.sort()
 	for f in ld:
 		if f[0:2] == "FD" and f.find(rg) != -1:
-			id =f[-10:-4]
+			id =f[-13:-4]
 			dte=f[2:8]
 			alt=0.0
 			dst=0.0
 			cnt=0
-                    	curs.execute("select count(*), max(altitude), max(distance) from OGNDATA where idflarm = ? and date = ? ", (id, dte))
+                    	selcmd="select count(*), max(altitude) as maxa, max(distance) as maxd from OGNDATA where idflarm = '%s' and date = '%s' "% (id, dte)
+                    	curs.execute(selcmd)
 			reg=curs.fetchone()
 			if reg and reg != None:
 				cnt=reg[0]
 				if cnt > 0:
 					alt=reg[1]
 					dst=reg[2]
-				geolocator = Nominatim(timeout=5)
-                    		curs.execute("select max(altitude), latitude, longitude from OGNDATA where idflarm = ? and date = ? ", (id, dte))
+				#geolocator = Nominatim(timeout=5)
+                    		execmd="select max(altitude) as maxa, latitude, longitude from OGNDATA where idflarm = '%s' and date = '%s' "% (id, dte)
+                    		curs.execute(execmd)
 				reg=curs.fetchone()
 				if reg and reg != None:
 					malt=reg[0]
@@ -59,8 +62,14 @@ def scandir (dir, rpath, html4):
 # Get IGC file by registration
 #
 
-rootdir = "/nfs/OGN/DIRdata/fd"
-conn=sqlite3.connect(r'/nfs/OGN/DIRdata/OGN.db')
+rootdir = config.DBpath+"/fd"
+if config.MySQL:
+        import MySQLdb                  # the SQL data base routines^M
+        conn=MySQLdb.connect(host=config.DBhost, user=config.DBuser, passwd=config.DBpasswd, db=config.DBname)
+else:
+        import sqlite3
+        conn=sqlite3.connect(config.DBpath+config.SQLite3)
+
 curs=conn.cursor()
 curs2=conn.cursor()
 
@@ -72,7 +81,7 @@ print("Content-type: text/html\n")
 html1="""<head><meta charset="UTF-8"></head><TITLE>Get the flights</TITLE> <IMG src="../gif/ogn-logo-150x150.png" border=1 alt=[image]><H1>The flights for the selected registration are: </H1> <HR> <P> %s </P> </HR> """
 html2="""<center><table><tr><td><pre>"""
 html3="""</pre></td></tr></table></center>"""
-html4='<a href="http://cunimb.net/igc2map.php?lien=http://repoogn.ddns.net:50080/DIRdata/fd'
+html4='<a href="http://cunimb.net/igc2map.php?lien=http://'+config.reposerver+'/DIRdata/fd'
 nlines=0
 
 if not 'regis' in form:

@@ -26,9 +26,9 @@ print (html1 % vd)                          # tell that
 print html2                                 # cursor for the ogndata table
 print "<a> Month   Positions   Gliders </a>"
 if rg == "ALL":
-	cursD.execute('select idrec, desc from RECEIVERS ')             # get all the receivers
+	cursD.execute('select idrec, descri from RECEIVERS ')             # get all the receivers
 else:
-	cursD.execute('select idrec, desc from RECEIVERS where idrec = ? ', [rg])             # get all the receivers
+	cursD.execute('select idrec, descri from RECEIVERS where idrec = ? ', [rg])             # get all the receivers
 
 for row in cursD.fetchall():                                    # search all the rows
 	id=row[0]

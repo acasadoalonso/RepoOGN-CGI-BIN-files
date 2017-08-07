@@ -2,9 +2,14 @@
 import cgi
 import os
 import cgitb
-import sqlite3
+import config
 from   geopy.geocoders import Nominatim
-conn=sqlite3.connect(r'/nfs/OGN/DIRdata/OGN.db')
+if config.MySQL:
+	import MySQLdb                  # the SQL data base routines^M
+	conn=MySQLdb.connect(host=config.DBhost, user=config.DBuser, passwd=config.DBpasswd, db=config.DBname)
+else:
+	import sqlite3
+	conn=sqlite3.connect(config.DBpath+config.SQLite3)
 curs=conn.cursor()
 curs2=conn.cursor()
 
@@ -18,7 +23,7 @@ html1="""<head><meta charset="UTF-8"></head><TITLE>Get the flights</TITLE> <IMG 
 #html1="""<TITLE>Get the flights</TITLE> <H1>The OGN flights for the selected date are: </H1> <HR> <P> %s </P> </HR> """
 html2="""<center><table><tr><td><pre>"""
 html3="""</pre></td></tr></table></center>"""
-html4='<a href="http://cunimb.net/igc2map.php?lien=http://repoogn.ddns.net:50080/DIRdata/fd/'
+html4='<a href="http://cunimb.net/igc2map.php?lien=http://'+config.reposerver+'/DIRdata/fd/'
 
 rootdir = "/nfs/OGN/DIRdata/fd"
 nlines=0
@@ -39,9 +44,10 @@ else:
 	ld=os.listdir(dir)
 	for f in ld:
 		if f[0:2] == "FD" and f[2:4] == yy and f[4:6] == mm and f[6:8] == dd:
-			id=f[-10:-4]
+			id=f[-13:-4]
 			dte=yy+mm+dd
-                    	curs.execute("select count(*), max(altitude), max(distance) from OGNDATA where idflarm = ? and date = ? ", (id, dte))
+                    	selcmd="select count(*), max(altitude) as maxa, max(distance) as maxd from OGNDATA where idflarm = '%s' and date = '%s' " % (id, dte)
+                    	curs.execute(selcmd)
 			reg=curs.fetchone()
 			if reg and reg != None:
 				cnt=reg[0]
@@ -51,7 +57,8 @@ else:
 				dst=reg[2]
 				if dst == None: dst=0.0
                                 geolocator = Nominatim(timeout=20)
-                                curs.execute("select max(altitude), latitude, longitude from OGNDATA where idflarm = ? and date = ? ", (id, dte))
+                                execmd="select max(altitude) as maxa, latitude, longitude from OGNDATA where idflarm = '%s' and date = '%s' " % (id, dte)
+                                curs.execute(execmd)
                                 reg=curs.fetchone()
                                 if reg and reg != None:
                                         malt=reg[0]
