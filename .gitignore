@@ -1,3 +1,4 @@
 apt*
 DIR*
 .htaccess
+*.pyc
