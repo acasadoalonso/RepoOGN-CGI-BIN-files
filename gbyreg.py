@@ -16,6 +16,7 @@ def scandir (dir, rpath, html4, curs, curs2):
 			alt=0.0
 			dst=0.0
 			cnt=0
+			addr=''
                     	selcmd="select count(*), max(altitude) as maxa, max(distance) as maxd from OGNDATA where idflarm = '%s' and date = '%s' "% (id, dte)
                     	curs.execute(selcmd)
 			reg=curs.fetchone()
@@ -42,11 +43,6 @@ def scandir (dir, rpath, html4, curs, curs2):
 						lati=0.0
 						long=0.0
 						addr=''
-	    		else:
-				cnt=0
-				alt=0.0
-				dst=0.0
-				addr=''
 			nlines += 1
 			if cnt > 0:
 				details =  (" ==> Count(%4d) MDist(%5.1f) MAlt(%6.1f) Lat(%7.4f) Long(%7.4f) %s " % (cnt, dst, alt, lati, long, addr))

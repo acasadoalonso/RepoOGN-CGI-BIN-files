@@ -46,6 +46,12 @@ else:
 		if f[0:2] == "FD" and f[2:4] == yy and f[4:6] == mm and f[6:8] == dd:
 			id=f[-13:-4]
 			dte=yy+mm+dd
+			cnt=0
+			alt=0.0
+			dst=0.0
+                        addr=''
+                        lati=0.0
+                        long=0.0
                     	selcmd="select count(*), max(altitude) as maxa, max(distance) as maxd from OGNDATA where idflarm = '%s' and date = '%s' " % (id, dte)
                     	curs.execute(selcmd)
 			reg=curs.fetchone()
@@ -72,13 +78,6 @@ else:
                                                 lati=0.0
                                                 long=0.0
                                                 addr=''
-	    		else:
-				cnt=0
-				alt=0.0
-				dst=0.0
-                                addr=''
-                                lati=0.0
-                                long=0.0
 			nlines += 1
 			details =  (" ==> Count(%4d) MDist(%5.1f) MAlt(%6.1f) Lat(%7.4f) Long(%7.4f) %s " % (cnt, dst, alt, lati, long, addr))
 			fn=html4 + 'Y' + yy + '/M' + mm + '/' + f.lstrip()
