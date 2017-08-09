@@ -52,7 +52,7 @@ def scandir (dir, rpath, html4, curs, curs2):
 			fname=("FN:%-33s" % f)
 			print fn , '">MAP</a>', "<a>", fname, details,  "</a>"
 		elif (os.path.isdir(dir+'/'+f)):
-			nlines +=scandir(dir+'/'+f, rpath+'/'+f, html4)
+			nlines +=scandir(dir+'/'+f, rpath+'/'+f, html4, curs, curs2)
 	return(nlines)
 #
 # Get IGC file by registration
