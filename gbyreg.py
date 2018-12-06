@@ -3,6 +3,7 @@ import cgi
 import os
 import cgitb
 import sqlite3
+import sys
 import config
 from   geopy.geocoders import Nominatim
 def scandir (dir, rpath, html4, curs, curs2):
@@ -52,7 +53,7 @@ def scandir (dir, rpath, html4, curs, curs2):
 			fname=("FN:%-33s" % f)
 			print fn , '">MAP</a>', "<a>", fname, details,  "</a>"
 		elif (os.path.isdir(dir+'/'+f)):
-			nlines +=scandir(dir+'/'+f, rpath+'/'+f, html4)
+			nlines +=scandir(dir+'/'+f, rpath+'/'+f, html4, curs, curs2)
 	return(nlines)
 #
 # Get IGC file by registration
@@ -71,19 +72,20 @@ curs2=conn.cursor()
 
 cgitb.enable()
 # select distinct date  from OGNDATA where idflarm=(select idglider from GLIDERS where registration = 'D-2520') ;
-form=cgi.FieldStorage()
-print("Content-type: text/html\n")
-
+regist =  sys.argv[1:]			# first parameter
+if regist :
+    rr = regist[0]                      # get the registration
+else:
+    rr = ''                        
 html1="""<head><meta charset="UTF-8"></head><TITLE>Get the flights</TITLE> <IMG src="../gif/ogn-logo-150x150.png" border=1 alt=[image]><H1>The flights for the selected registration are: </H1> <HR> <P> %s </P> </HR> """
 html2="""<center><table><tr><td><pre>"""
 html3="""</pre></td></tr></table></center>"""
 html4='<a href="http://cunimb.net/igc2map.php?lien=http://'+config.reposerver+'/DIRdata/fd'
 nlines=0
 
-if not 'regis' in form:
-	print (htm1l % 'Invalid  registration')
+if rr == '':
+	print (html1 % 'Invalid  registration')
 else:
-	rr=form['regis'].value
 	rg=rr.strip()
 	rg=rg.upper()
        	cmd="select cn from GLIDERS where registration = '%s' " % rg

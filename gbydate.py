@@ -2,6 +2,7 @@
 import cgi
 import os
 import cgitb
+import sys
 import config
 from   geopy.geocoders import Nominatim
 if config.MySQL:
@@ -14,10 +15,12 @@ curs=conn.cursor()
 curs2=conn.cursor()
 
 cgitb.enable()
-
+datereq =  sys.argv[1:]                  # first parameter
+if datereq :
+    dt = datereq[0]                      # get the registration
+else:
+    dt = ''
 #                    select count(*), max(altitude), max(distance) from OGNDATA where idflarm = 'DDE48A' and date = '260815' ;
-form=cgi.FieldStorage()
-print("Content-type: text/html\n")
 
 html1="""<head><meta charset="UTF-8"></head><TITLE>Get the flights</TITLE> <IMG src="../gif/ogn-logo-150x150.png" border=1 alt=[image]><H1>The flights for the selected date are: </H1> <HR> <P> %s </P> </HR> """
 #html1="""<TITLE>Get the flights</TITLE> <H1>The OGN flights for the selected date are: </H1> <HR> <P> %s </P> </HR> """
@@ -28,13 +31,13 @@ html4='<a href="http://cunimb.net/igc2map.php?lien=http://'+config.reposerver+'/
 rootdir = "/nfs/OGN/DIRdata/fd"
 nlines=0
 
-if not 'dd' in form:
+if dt == '':
 	print (html1 % 'Invalid date')
 else:
-	dd=form['dd'].value
-	mm=form['mm'].value
-	yy=form['yy'].value
-	if int(dd) > 0 and int(dd) <32 and int(mm) > 0 and int(mm) < 13 and int(yy) > 14 and int(yy) < 18:
+	dd=dt[0:2]
+	mm=dt[2:4]
+	yy=dt[4:6]
+	if int(dd) > 0 and int(dd) <32 and int(mm) > 0 and int(mm) < 13 and int(yy) > 14 and int(yy) < 20:
 		vd = ('Valid date: %s-%s-%s. </br>Select now the flight to display:' %(dd, mm, yy))
 	else:
 		vd = "Invalid date ..."

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import cgi
 import os
+import sys
 import cgitb
 import sqlite3
 import time
@@ -16,8 +17,6 @@ execfilename="/nfs/OGN/src/processogn.py"
 tempdir     ="/nfs/OGN/DIRdata/tmp/"
 datapath    ="/nfs/OGN/DIRdata/"
 
-form=cgi.FieldStorage()
-print("Content-type: text/html\n")
 
 html1="""<TITLE>Get the flights</TITLE> <IMG src="../gif/ogn-logo-150x150.png" border=1 alt=[image]><H1>Today's flights for the selected registration are: </H1> <HR> <P> %s </P> </HR> """
 html2="""<center><table><tr><td><pre>"""
@@ -25,10 +24,15 @@ html3="""</pre></td></tr></table></center>"""
 html4='<a href="http://cunimb.net/igc2map.php?lien=http://'+config.reposerver+'/DIRdata/tmp/%s'
 
 nlines=0                                            # init the number of lines(files) shown
-
-if not 'regis' in form:                             # check if registrtion is provided                                                         
+# select distinct date  from OGNDATA where idflarm=(select idglider from GLIDERS where registration = 'D-2520') ;
+regist =  sys.argv[1:]                  # first parameter
+if not regist :
+    	rr = ''
 	print (html1 % 'Invalid  registration')
 else:
+    	rr = regist[0]                      # get the registration
+	rg=rr.strip()                               # clean the whitespace
+	rg=rg.upper()                               # translate to upper case
 	
 	date=datetime.datetime.now()                # get the date
 	dte=date.strftime("%y%m%d")                 # today's date
@@ -39,9 +43,7 @@ else:
 	cmd="rm "+tempdir+"FD* "		    # remove all the previous FD files
 	os.system(cmd)
 	execfile(execfilename)                      # invoke to processogn.py in order to generate the IGC file of today
-	rr=form['regis'].value			    # get the registration ID or ALL
-	rg=rr.strip()                               # clean the whitespace
-	rg=rg.upper()                               # translate to upper case
+	print “TTT”
 	vd = ('Valid registration: %-s:' % rg)      # prepate the literal to show
 	print (html1 % vd)                          # tell that         
 	print html2                                 # prepare the table header
