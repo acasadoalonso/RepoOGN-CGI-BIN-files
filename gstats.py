@@ -6,9 +6,19 @@ import os
 import urllib2
 import sqlite3
 import os
+import sys
+import config
 cgitb.enable()
 
-dbpath ="/nfs/OGN/DIRdata/"
+www=True
+streq =  sys.argv[1:]
+if streq :
+        sta = streq[0]                          # request the station
+        sta=sta.upper()
+        rg=sta.strip()
+else:
+        rg = "ALL"                            # take it as default
+dbpath =config.DBpath
 html1="""<TITLE>Get the flights</TITLE> <IMG src="../gif/ogn-logo-150x150.png" border=1 alt=[image]><H1>Statistics of the OGN receiver stations:: </H1> <HR> <P> %s </P> </HR> """
 html2="""<center><table><tr><td><pre>"""
 html3="""</pre></td></tr></table></center>"""
@@ -16,12 +26,7 @@ filename=dbpath+'OGN.db'                                    # open th DB in read
 fd = os.open(filename, os.O_RDONLY)
 conn = sqlite3.connect('/dev/fd/%d' % fd)
 cursD=conn.cursor()  
-form=cgi.FieldStorage()
-print("Content-type: text/html\n") 
-rr=form['regis'].value                      # get the registration ID or ALL
-rg=rr.strip()                               # clean the whitespace
-rg=rg.upper()                               # translate to upper case
-vd = ('Valid registration: %-s:' % rg)      # prepate the literal to show
+vd = ('Valid station: %-s:' % rg)      # prepate the literal to show
 print (html1 % vd)                          # tell that
 print html2                                 # cursor for the ogndata table
 print "<a> Month   Positions   Gliders </a>"

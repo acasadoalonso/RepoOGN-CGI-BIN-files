@@ -13,16 +13,15 @@ cgitb.enable()
 # This script generates all the IGC files that are live now and present the list to the user
 #
 
-execfilename="/nfs/OGN/src/processogn.py"
-tempdir     ="/nfs/OGN/DIRdata/tmp/"
-datapath    ="/nfs/OGN/DIRdata/"
+execfilename=config.PYsrc+"/processogn.py"
+tempdir     =config.DBpath+"/tmp/"
+datapath    =config.DBpath
 
 
 html1="""<TITLE>Get the flights</TITLE> <IMG src="../gif/ogn-logo-150x150.png" border=1 alt=[image]><H1>Today's flights for the selected registration are: </H1> <HR> <P> %s </P> </HR> """
 html2="""<center><table><tr><td><pre>"""
 html3="""</pre></td></tr></table></center>"""
 html4='<a href="http://cunimb.net/igc2map.php?lien=http://'+config.reposerver+'/DIRdata/tmp/%s'
-
 nlines=0                                            # init the number of lines(files) shown
 # select distinct date  from OGNDATA where idflarm=(select idglider from GLIDERS where registration = 'D-2520') ;
 regist =  sys.argv[1:]                  # first parameter
@@ -43,7 +42,6 @@ else:
 	cmd="rm "+tempdir+"FD* "		    # remove all the previous FD files
 	os.system(cmd)
 	execfile(execfilename)                      # invoke to processogn.py in order to generate the IGC file of today
-	print “TTT”
 	vd = ('Valid registration: %-s:' % rg)      # prepate the literal to show
 	print (html1 % vd)                          # tell that         
 	print html2                                 # prepare the table header
@@ -66,6 +64,6 @@ else:
 			rg="ALL"
 		print "No flights found for:", rg 
 	print html3                                 # place the end of the table
-quit()                                              # all done
+#quit()                                              # all done
 	
 

@@ -10,9 +10,15 @@ if config.MySQL:
 	conn=MySQLdb.connect(host=config.DBhost, user=config.DBuser, passwd=config.DBpasswd, db=config.DBname)
 else:
 	import sqlite3
-	conn=sqlite3.connect(config.DBpath+config.SQLite3)
+	conn=sqlite3.connect(config.DBpath+config.DBSQLite3)
 curs=conn.cursor()
 curs2=conn.cursor()
+setcmd1="set global sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';"
+setcmd2="set session sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';"
+if config.MySQL:
+	curs.execute(setcmd1)
+	curs.execute(setcmd2)
+
 
 cgitb.enable()
 datereq =  sys.argv[1:]                  # first parameter
@@ -28,7 +34,7 @@ html2="""<center><table><tr><td><pre>"""
 html3="""</pre></td></tr></table></center>"""
 html4='<a href="http://cunimb.net/igc2map.php?lien=http://'+config.reposerver+'/DIRdata/fd/'
 
-rootdir = "/nfs/OGN/DIRdata/fd"
+rootdir = config.DBpath+"/fd"
 nlines=0
 
 if dt == '':

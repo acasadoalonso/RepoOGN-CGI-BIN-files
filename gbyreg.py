@@ -58,17 +58,22 @@ def scandir (dir, rpath, html4, curs, curs2):
 #
 # Get IGC file by registration
 #
-
+setcmd1="set global sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';"
+setcmd2="set session sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';"
 rootdir = config.DBpath+"/fd"
 if config.MySQL:
         import MySQLdb                  # the SQL data base routines^M
         conn=MySQLdb.connect(host=config.DBhost, user=config.DBuser, passwd=config.DBpasswd, db=config.DBname)
 else:
         import sqlite3
-        conn=sqlite3.connect(config.DBpath+config.SQLite3)
+        conn=sqlite3.connect(config.DBpath+config.DBSQLite3)
 
 curs=conn.cursor()
 curs2=conn.cursor()
+
+if config.MySQL:
+	curs.execute(setcmd1)
+	curs.execute(setcmd2)
 
 cgitb.enable()
 # select distinct date  from OGNDATA where idflarm=(select idglider from GLIDERS where registration = 'D-2520') ;
