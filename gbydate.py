@@ -88,7 +88,10 @@ else:
                                                 long=0.0
                                                 addr=''
 			nlines += 1
-			details =  (" ==> Count(%4d) MDist(%5.1f) MAlt(%6.1f) Lat(%7.4f) Long(%7.4f) %s " % (cnt, dst, alt, lati, long, addr))
+			if cnt > 0:
+				details =  (" ==> Count(%4d) MDist(%5.1f) MAlt(%6.1f) Lat(%7.4f) Long(%7.4f) %s " % (cnt, dst, alt, lati, long, addr))
+			else:
+				details = " "
 			fn=html4 + 'Y' + yy + '/M' + mm + '/' + f.lstrip()
 			fname=("FN:%-33s" % f)
 			print fn , '">MAP</a>', "<a>", fname, details,  "</a>"

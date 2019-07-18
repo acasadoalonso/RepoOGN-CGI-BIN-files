@@ -1,4 +1,4 @@
-reposerver="repoogn.ddns.net:50080"
+reposerver="repoogn.ddns.net"
 DBpath='/nfs/OGN/DIRdata/' 
 DBhost='ubuntu' 
 DBname='OGNDB' 
